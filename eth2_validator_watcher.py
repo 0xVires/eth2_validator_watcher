@@ -78,13 +78,13 @@ def get_initial_balance_of_date(date):
         total += i[0]
     return total
 
-def get_increase_and_APR(n_days):
+def get_increase_and_APR(n_days, current_balance):
     """Gets the APR based on data from the previous n days.
     n_days has to be at least 1.
     """
     inital_balance = get_initial_balance_of_date(n_days_ago(n_days))
     if inital_balance > 0:
-        increase = total_balance - inital_balance
+        increase = current_balance - inital_balance
         # Since we query shortly after midnight, we take the initial balance of the previous day
         if n_days == 1:
             multiplier = 365
@@ -127,8 +127,8 @@ def check_balance_and_record(data):
         total_balance += balance        
     if is_between_0000_and_0010(timestamp):
         # since function runs after midnight, substract +1 day
-        d_increase, d_APR = get_increase_and_APR(1)
-        w_increase, w_APR = get_increase_and_APR(8)
+        d_increase, d_APR = get_increase_and_APR(1, total_balance)
+        w_increase, w_APR = get_increase_and_APR(8, total_balance)
         message = f"Today's balance increase: {d_increase}\n" \
                   f"Weekly balance increase:  {w_increase}\n\n" \
                   f"APR (last 24h): {d_APR}\n" \
