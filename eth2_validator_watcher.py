@@ -117,7 +117,7 @@ def check_balance_and_record(data):
             diff = balance - get_previous_balance(validator)
             if not diff > 0:
                 message = f"WARNING! The balance of validator {validator} decreased by" \
-                          f"{str(round(diff/10**9,2))} ETH during the last 15min!"
+                          f"{str(round(diff/10**9,8))} ETH since last query!"
                 send_telegram(message, MY_TEL_ID)
                 time.sleep(1)
         # Insert balances into db
