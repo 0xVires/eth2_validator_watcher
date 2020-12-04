@@ -1,4 +1,4 @@
-# eth2_validator_watcher
+# ETH2 Validator Watcher
 
 Uses the beaconcha.in API to query your validator's balance. Stores it in a sqlite db.
 If the current total balance is lower than the previously recorded balance, an alert is sent.
@@ -10,4 +10,4 @@ Setup:
 3) Adjust the config of the python script:
   - List the your validator indexes as a string - comma separated but without space inbetween!
   - Change the MY_TEL_ID and TEL_TOKEN to your values
-4) Run the script as a cronjob every ~15min (respects the rate limits of the API and the epoch length of 6.4min)
+4) Run the script as a cronjob every 15min (respects the rate limits of the API and the epoch length of 6.4min)
