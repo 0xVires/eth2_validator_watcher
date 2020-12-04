@@ -138,8 +138,8 @@ def check_balance_and_record(data):
         w_increase, w_APR = get_increase_and_APR(8, total_balance)
         message = f"Today's balance increase: {d_increase}\n" \
                   f"Weekly balance increase:  {w_increase}\n\n" \
-                  f"APR (last 24h): {d_APR}\n" \
-                  f"APR (last 7d):  {w_APR}"
+                  f"APR (based on last 24h): {d_APR}\n" \
+                  f"APR (based on last 7d):  {w_APR}"
         send_telegram(message, MY_TEL_ID)
 
 def main():
