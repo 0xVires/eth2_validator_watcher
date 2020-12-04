@@ -16,7 +16,7 @@ Setup:
 
 ## Prometheus Validator Balance
 
-Inspired by https://github.com/cdaly333/eth2-balance-logger/blob/main/balance-logger.py
+Inspired by Colin Daly https://github.com/cdaly333/eth2-balance-logger/blob/main/balance-logger.py
 
 Queries the the balances of your validators via beacon API and provides it to prometheus.
 
