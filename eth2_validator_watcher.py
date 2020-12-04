@@ -31,19 +31,24 @@ def get_data():
     BEACON_API = "https://beaconcha.in/api/v1/validator/"
     return requests.get(BEACON_API+my_validators).json()["data"]
     
-def get_previous_balance(validator):
+def get_previous_balance():
+    """"Gets the total balance of your validators from the latest db entry"""
+    num_validators = len(my_validators.split(","))
     c.execute("""SELECT 
-                    balance
-                FROM 
-                    validators
-                WHERE
-                    validator = ?
-                ORDER BY 
-                    timestamp
-                DESC""", (validator,))
-    result = c.fetchone()
+                    SUM(balance)
+                FROM
+                    (SELECT
+                        balance
+                    FROM
+                        validators
+                    ORDER BY 
+                        timestamp
+                    DESC
+                    LIMIT
+                        ?)""", (num_validators,))
+    result = c.fetchall()
     if result:
-        return result[0]
+        return result[0][0]
     else:
         return None
 
@@ -106,25 +111,27 @@ def send_telegram(text, chat_id):
         print(ex)
     
 def check_balance_and_record(data):
-    """Gets the balance of every validator and compares it with t"""
+    """Gets the total balance of your validators and compares it with the balance from the last query.
+    Stores the individual balance in the db. Notifies if the balance decreased. 
+    Also sends end of day notification with today's/this weeks balance increase & APR."""
     timestamp = datetime.datetime.now()
     total_balance = 0
+    previous_balance = get_previous_balance()
     for val in data:
         validator = val["validatorindex"]
         balance = val["balance"]
-        # If a previous entry exists, check if balance increased, notify if not
-        if get_previous_balance(validator):
-            diff = balance - get_previous_balance(validator)
-            if not diff > 0:
-                message = f"WARNING! The balance of validator {validator} decreased by" \
-                          f"{str(round(diff/10**9,8))} ETH since last query!"
-                send_telegram(message, MY_TEL_ID)
-                time.sleep(1)
+        total_balance += balance  
         # Insert balances into db
         with conn:
             c.execute("INSERT INTO validators VALUES (?, ?, ?)", (timestamp, validator, balance))
-        # Record total balance for end of day reporting
-        total_balance += balance        
+    # If a previous entry exists, check if balance increased, notify if not
+    if previous_balance:
+        diff = total_balance - previous_balance
+        if not diff > 0:
+            message = f"WARNING! The balance of your validators decreased by " \
+                      f"{str(round(diff/10**9,8))} ETH since the last query!"
+            send_telegram(message, MY_TEL_ID)
+    # End of day reporting
     if is_between_0000_and_0010(timestamp):
         # since function runs after midnight, substract +1 day
         d_increase, d_APR = get_increase_and_APR(1, total_balance)
