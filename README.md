@@ -1,6 +1,6 @@
 # ETH2 Validator Watcher
 
-## Validator Watcher
+## Validator Watcher - eth2_validator_watcher.py
 
 Uses the beaconcha.in API to query your validator's balance. Stores it in a sqlite db.
 If the current total balance is lower than the previously recorded balance, an alert is sent.
@@ -14,7 +14,7 @@ Setup:
   - Change the MY_TEL_ID and TEL_TOKEN to your values
 4) Run the script as a cronjob every 15min (respects the rate limits of the API and the epoch length of 6.4min)
 
-## Prometheus Validator Balance
+## Prometheus Validator Balance - eth2_validator_balance_prometheus.py
 
 Inspired by Colin Daly https://github.com/cdaly333/eth2-balance-logger/blob/main/balance-logger.py
 
