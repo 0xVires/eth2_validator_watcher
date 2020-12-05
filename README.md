@@ -25,3 +25,5 @@ Setup:
 2) Run the script as a systemd service or in screen/tmux
 3) Add the port as a job to your prometheus.yml
 4) Create a new panel in grafana and look for the "eth2_validator_balance" metric
+
+**Oh and I'm not a trained programmer, so there might be some bugs & ugly code ;)**
