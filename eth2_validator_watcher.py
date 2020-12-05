@@ -127,7 +127,7 @@ def check_balance_and_record(data):
     # If a previous entry exists, check if balance increased, notify if not
     if previous_balance:
         diff = total_balance - previous_balance
-        if not diff > 0:
+        if diff < 0:
             message = f"WARNING! The balance of your validators decreased by " \
                       f"{str(round(diff/10**9,8))} ETH since the last query!"
             send_telegram(message, MY_TEL_ID)
